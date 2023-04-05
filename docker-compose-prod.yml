@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    #command: python /app_backend/manage.py runserver 0.0.0.0:8000
+    command: gunicorn backend.wsgi -b 0.0.0.0:8000 # new
+    volumes:
+      - .:/app_backend
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    environment:
+     - "DJANGO_SECRET_KEY=yI8ViDOFuwxGcyeWEBG7izYI4YgPOdmlsnED8T64oVzQ8Zbb_8E"
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
+volumes:
+  postgres_data:
