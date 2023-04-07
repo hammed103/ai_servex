@@ -13,7 +13,7 @@ from .serializers import (
     ChatSerializer,
 )
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 
 class ChatGPT(APIView):
