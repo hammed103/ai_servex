@@ -39,17 +39,32 @@ class ChatGPT(APIView):
 
             messages = Message.objects.filter(chat=chat).order_by("timestamp")
             message_list = [
-                                {"role": "system", "content": "You are a helpful assistant."},
-                                {"role": "user", "content": "The rules of conversation are ,1. Always return  a numbered  bullet list without details to any question asked 2.Only reply to questions that involve looking for help in finding services or specialist , Else reply with my primary function is to find services or specialists for you "},
-                                {"role": "assistant", "content": "Sure, I can do that. Just let me know if you would like me to format any specific information in a different way. ."},
-
-                            ]
+                {"role": "system", "content": "You are a helpful assistant."},
+                {
+                    "role": "user",
+                    "content": "The rules of conversation are ,1. Always return  a numbered  bullet list without details to any question asked 2.Only reply to questions that involve looking for help in finding services or specialist , Else reply with my primary function is to find services or specialists for you ",
+                },
+                {
+                    "role": "assistant",
+                    "content": "Sure, I can do that. Just let me know if you would like me to format any specific information in a different way. .",
+                },
+            ]
             for message in messages:
                 role = message.role
                 message_list.append({"role": role, "content": message.content})
-            message_list.append({"role": "user", "content": "return  a numbered  bullet list without details of specialist or services that can help , " })
-            message_list.append({"role": "user", "content": " If questions do not involve seeking a specialist or service , reply with my primary function is to find you a specialist " })
-            message_list.append({"role": "user", "content": request_message })
+            message_list.append(
+                {
+                    "role": "user",
+                    "content": "return  a numbered  bullet list without details of specialist or services that can help , ",
+                }
+            )
+            message_list.append(
+                {
+                    "role": "user",
+                    "content": " If questions do not involve seeking a specialist or service , reply with my primary function is to find you a specialist ",
+                }
+            )
+            message_list.append({"role": "user", "content": request_message})
 
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo", messages=message_list
@@ -58,16 +73,15 @@ class ChatGPT(APIView):
             ai_message = response.choices[0].message["content"].strip()
 
             # Regular expression pattern to match numbered list items
-            pattern = r'^\d+\.\s+.*$'
+            pattern = r"^\d+\.\s+.*$"
 
             # Find all matches in the document
             matches = re.findall(pattern, ai_message, re.MULTILINE)
 
             matches = [i.split(" - ")[0] for i in matches]
 
-            if len(matches) > 2 :
+            if len(matches) > 2:
                 ai_message = "\n".join(matches)
-            
 
             ai_message_obj = Message(
                 content=ai_message, role=Message.RoleChoices.ASSISTANT, chat=chat
