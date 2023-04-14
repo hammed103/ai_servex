@@ -55,7 +55,7 @@ class ChatGPT(APIView):
             message_list.append(
                 {
                     "role": "user",
-                    "content": "return  a numbered  bullet list without details of specialist or services that can help , ",
+                    "content": "Always return  a numbered  bullet list without details of specialist or services that can help or are related to my question, ",
                 }
             )
             message_list.append(
