@@ -4,7 +4,7 @@ from rest_framework import status
 import openai
 import re
 import requests
-
+import math
 
 from .models import Chat, Message
 from .serializers import (
@@ -53,9 +53,6 @@ def more(pid):
         "reviews": reviews,
         "PHOTO_REFERENCE": PHOTO_REFERENCE,
     }
-
-
-import math
 
 
 def haversine_distance(coord1, coord2):
