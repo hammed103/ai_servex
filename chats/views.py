@@ -185,7 +185,10 @@ class ChatGPT(APIView):
                         "PHOTO_REFERENCE": PHOTO_REFERENCE,
                     }
 
-                address_search = matches[0] + " around " + address
+                try:
+                    address_search = matches[0] + " around " + address
+                except:
+                    address_search = matches[1] + " around " + address
 
                 url = (
                     "https://maps.googleapis.com/maps/api/place/textsearch/json?query="
